@@ -43,15 +43,6 @@ This is a vertx TCP eventbus java cliient implementation.
         message.setAddress("hello");
         message.setReplyAdress("dsadsad");
         message.setBody("{\"value\":\"Message Constructed\"}");
-        eventBus.publishMessage(message, new MessageHandler() {
-            public void handle(Message responseMessage) {
-                //handle response message;
-            }
-
-            public void handleError(Message errorMessage) {
-                //no
-            }
-
-        });
+        eventBus.publishMessage(message);
 
 ```

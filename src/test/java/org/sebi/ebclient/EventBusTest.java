@@ -15,7 +15,7 @@ public class EventBusTest {
 
     @Before
     public void setup() throws IOException{
-        VertxServer vertxServer = new VertxServer();
+      //  VertxServer vertxServer = new VertxServer();
         eventBus = new EventBus("localhost",7000);
 
     }
@@ -46,11 +46,13 @@ public class EventBusTest {
         message.setAddress("hello");
         message.setReplyAdress("dsadsad");
         message.setBody("{\"value\":\"Message Constructed\"}");
-        eventBus.sendMessage(message, new MessageHandler() {
+        eventBus.register("hello", null,new MessageHandler() {
             public void handle(Message responseMessage) {
+                System.out.println(responseMessage.getBody());
                 assertEquals(responseMessage.getType(),"message");
             }
         });
+        eventBus.publishMessage(message);
         Thread.sleep(500);
     }
 
@@ -68,5 +70,7 @@ public class EventBusTest {
         });
         Thread.sleep(500);
     }
+
+
 
 }

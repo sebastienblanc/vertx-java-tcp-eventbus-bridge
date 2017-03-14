@@ -110,6 +110,7 @@ public class Message {
             }
 
             map.put("body",jsonMessage.substring(jsonMessage.indexOf("body")+6,jsonMessage.length()-1));
+            message.setBody(map.get("body"));
             message.setType(map.get("type"));
             message.setReplyAdress(map.get("replyAdress"));
             message.setAddress(map.get("address"));

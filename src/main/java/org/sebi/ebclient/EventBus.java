@@ -80,9 +80,8 @@ public class EventBus {
        sendFrame(message);
     }
 
-    public void publishMessage(Message message, MessageHandler responseHandler) throws IOException{
+    public void publishMessage(Message message) throws IOException{
         message.setType("publish");
-        handlers.put(message.getReplyAdress(),responseHandler);
         sendFrame(message);
     }
 
