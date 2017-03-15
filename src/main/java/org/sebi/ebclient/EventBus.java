@@ -12,6 +12,7 @@ import java.nio.charset.CharsetEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.UUID;
 
 /**
  * Created by sblanc on 3/12/17.
@@ -76,6 +77,9 @@ public class EventBus {
 
     public void sendMessage(Message message, MessageHandler responseHandler) throws IOException{
        message.setType("send");
+       if("".equals(message.getReplyAdress())){
+           message.setReplyAdress(UUID.randomUUID().toString());
+        }
        handlers.put(message.getReplyAdress(),responseHandler);
        sendFrame(message);
     }
