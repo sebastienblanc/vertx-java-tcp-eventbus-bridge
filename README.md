@@ -4,7 +4,7 @@ This is a vertx TCP eventbus java cliient implementation.
 
 ## Create a new `EventBus`
 
-`EventBus eventBus new EventBus("localhost",7000)`
+`EventBus eventBus new EventBus("localhost",7000, errorHandler)`
 
 ## Register to a topic
 

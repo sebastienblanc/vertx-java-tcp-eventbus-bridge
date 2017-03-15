@@ -25,6 +25,7 @@ public class EventBus {
     final DataOutputStream outToServer;
     final DataInputStream inFromServer;
     private Map<String,MessageHandler> handlers;
+    private MessageHandler errorHandler;
 
     final Thread inThread = new Thread() {
         @Override
@@ -38,7 +39,7 @@ public class EventBus {
                     inFromServer.readFully(buffer);
                     Message message = Message.toMessage(new String(buffer));
                     if(message.isError()){
-                        throw new MessageException();
+                        errorHandler.handle(message);
                     }
                     else {
                         MessageHandler handler = handlers.get(message.getAddress());
@@ -57,11 +58,12 @@ public class EventBus {
         };
     };
 
-    public EventBus(String host, int port) throws IOException {
+    public EventBus(String host, int port, MessageHandler errorHandler) throws IOException {
        clientSocket = new Socket(host, port);
        outToServer = new DataOutputStream(clientSocket.getOutputStream());
        inFromServer = new DataInputStream(clientSocket.getInputStream());
        handlers = new HashMap<String, MessageHandler>();
+       this.errorHandler = errorHandler;
        inThread.start();
     }
 
@@ -113,4 +115,5 @@ public class EventBus {
         outToServer.writeInt(message.toJsonString().getBytes() .length);
         outToServer.write(message.toJsonString().getBytes());
     }
+
 }

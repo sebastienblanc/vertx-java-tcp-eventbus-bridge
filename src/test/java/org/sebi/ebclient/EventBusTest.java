@@ -16,7 +16,12 @@ public class EventBusTest {
     @Before
     public void setup() throws IOException{
       //  VertxServer vertxServer = new VertxServer();
-        eventBus = new EventBus("localhost",7000);
+        eventBus = new EventBus("localhost", 7000, new MessageHandler() {
+            @Override
+            public void handle(Message message) {
+               System.out.println("Something went wrong : " + message.getBody());
+            }
+        });
 
     }
 
