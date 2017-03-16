@@ -1,5 +1,8 @@
 package org.sebi.ebclient;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,6 +29,7 @@ public class EventBus {
     final DataInputStream inFromServer;
     private Map<String,MessageHandler> handlers;
     private MessageHandler errorHandler;
+    private Gson gson;
 
     final Thread inThread = new Thread() {
         @Override
@@ -37,7 +41,9 @@ public class EventBus {
                     int count = inFromServer.readInt();
                     byte[] buffer = new byte[count];
                     inFromServer.readFully(buffer);
-                    Message message = Message.toMessage(new String(buffer));
+                    String jsonString = new String(buffer);
+                    //Message message = Message.toMessage(jsonString);
+                    Message message = toMessage(jsonString);
                     if(message.isError()){
                         errorHandler.handle(message);
                     }
@@ -64,6 +70,7 @@ public class EventBus {
        inFromServer = new DataInputStream(clientSocket.getInputStream());
        handlers = new HashMap<String, MessageHandler>();
        this.errorHandler = errorHandler;
+       gson = new GsonBuilder().disableHtmlEscaping().create();
        inThread.start();
     }
 
@@ -112,8 +119,13 @@ public class EventBus {
     }
 
     private void sendFrame(Message message) throws IOException{
-        outToServer.writeInt(message.toJsonString().getBytes() .length);
-        outToServer.write(message.toJsonString().getBytes());
+        String jsonString = gson.toJson(message);
+        outToServer.writeInt(jsonString.getBytes().length);
+        outToServer.write(jsonString.getBytes());
+    }
+
+    private Message toMessage(String jsonMessage) {
+        return gson.fromJson(jsonMessage, Message.class);
     }
 
 }

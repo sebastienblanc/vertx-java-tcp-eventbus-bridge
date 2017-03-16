@@ -1,6 +1,9 @@
 package org.sebi.ebclient;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,7 +22,7 @@ public class EventBusTest {
         eventBus = new EventBus("localhost", 7000, new MessageHandler() {
             @Override
             public void handle(Message message) {
-               System.out.println("Something went wrong : " + message.getBody());
+               System.out.println("Something went wrong : " + message.getMessage());
             }
         });
 
@@ -38,9 +41,6 @@ public class EventBusTest {
 
             }
 
-            public void handleError(Message errorMessage) {
-
-            }
         });
         Thread.sleep(500);
     }
@@ -50,7 +50,9 @@ public class EventBusTest {
         Message message = new Message();
         message.setAddress("hello");
         message.setReplyAdress("dsadsad");
-        message.setBody("{\"value\":\"Message Constructed\"}");
+        Map bodyMap = new LinkedHashMap();
+        bodyMap.put("value","message constructed");
+        message.setBody(bodyMap);
         eventBus.register("hello", null,new MessageHandler() {
             public void handle(Message responseMessage) {
                 System.out.println(responseMessage.getBody());
@@ -67,7 +69,9 @@ public class EventBusTest {
         message.setType("send");
         message.setAddress("lala");
         message.setReplyAdress("dsadsad");
-        message.setBody("{\"value\":\"Message Constructed\"}");
+        Map bodyMap = new LinkedHashMap();
+        bodyMap.put("value","message constructed");
+        message.setBody(bodyMap);
         eventBus.sendMessage(message, new MessageHandler() {
             public void handle(Message responseMessage) {
                 fail();
