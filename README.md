@@ -4,8 +4,14 @@ This is a vertx TCP eventbus java cliient implementation.
 
 ## Create a new `EventBus`
 
-`EventBus eventBus new EventBus("localhost",7000, errorHandler)`
-
+```
+EventBus eventBus new EventBus("localhost",7000, new MessageHandler() {
+            @Override
+            public void handle(Message message) {
+               System.out.println("Something went wrong : " + message.getMessage());
+             }
+           });
+```
 ## Register to a topic
 
 `eventBus.register("myTopic", headers, myHandler)`
@@ -21,7 +27,9 @@ This is a vertx TCP eventbus java cliient implementation.
         Message message = new Message();
         message.setAddress("hello");
         message.setReplyAdress("dsadsad");
-        message.setBody("{\"value\":\"Message Constructed\"}");
+        Map bodyMap = new HashMap();
+        bodyMap.put("value","message constructed");
+        message.setBody(bodyMap);
         eventBus.sendMessage(message, new MessageHandler() {
             public void handle(Message responseMessage) {
                 //handle response message;
@@ -42,7 +50,9 @@ This is a vertx TCP eventbus java cliient implementation.
         Message message = new Message();
         message.setAddress("hello");
         message.setReplyAdress("dsadsad");
-        message.setBody("{\"value\":\"Message Constructed\"}");
+        Map bodyMap = new HashMap();
+        bodyMap.put("value","message constructed");
+        message.setBody(bodyMap);
         eventBus.publishMessage(message);
 
 ```
