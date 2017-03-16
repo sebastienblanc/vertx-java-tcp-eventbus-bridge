@@ -34,11 +34,6 @@ EventBus eventBus new EventBus("localhost",7000, new MessageHandler() {
             public void handle(Message responseMessage) {
                 //handle response message;
             }
-
-            public void handleError(Message errorMessage) {
-                //no
-            }
-
         });
 
 ```
